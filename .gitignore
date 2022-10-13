@@ -1,0 +1,5 @@
+bin/
+test.cpp
+.vscode/
+*.exe
+*.out
