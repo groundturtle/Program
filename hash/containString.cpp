@@ -1,8 +1,8 @@
 /*
  * @Author: avert-win
  * @Date: 2022-04-22 16:43:51
- * @LastEditTime: 2022-04-22 17:10:13
- * @Description: 请填写简介
+ * @LastEditTime: 2022-10-13 18:02:50
+ * @Description: 使用滚动哈希方法，求解字符串包含问题。时间复杂度O(M+N)。
  */
 
 #include<iostream>
