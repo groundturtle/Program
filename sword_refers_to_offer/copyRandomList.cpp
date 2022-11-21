@@ -1,7 +1,7 @@
 /*
  * @Author: avert-win
  * @Date: 2022-10-08 15:56:23
- * @LastEditTime: 2022-10-09 16:26:29
+ * @LastEditTime: 2022-11-14 18:09:50
  * @FilePath: \ProgramDaily\sword_refers_to_offer\copyRandomList.cpp
  * @Description: 复制一个复杂链表，该链表每个节点包括一个指向随机节点或NULL的指针。
  * @LastEditors: avert-win
@@ -26,7 +26,8 @@ public:
  * @brief 解法一：先生成next节点，并记录每个节点的指针，然后再遍历一遍生成random指针。
  *      寻找random指针的时间复杂度O(n^2)，存储节点指针的空间复杂度为O(n)。
  * @brief 解法二：用哈希表记录每个旧节点与新节点的对应关系，若在表中查找不到则生成并加入表。
- *      通过哈希表记录，避免了重复生成一个节点或指向不存在的节点，如此就不需要遍历两次。
+ *      通过哈希表记录，避免了重复生成一个节点或指向不存在的节点
+ *          （因为节点内部还包含指向其他节点的指针，因此对于逻辑上的同一节点不能存在两个实体）。
  *      时间复杂度O(n)，空间复杂度O(n)。
  */
 

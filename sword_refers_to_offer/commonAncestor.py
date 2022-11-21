@@ -1,9 +1,9 @@
 '''
 Author: avert-win
 Date: 2022-10-22 21:55:57
-LastEditTime: 2022-10-22 22:14:43
+LastEditTime: 2022-11-14 18:07:10
 FilePath: \ProgramDaily\sword_refers_to_offer\commonAncestor.py
-Description: 简介
+Description: 寻找二叉树中给定两节点的最矮公共祖宗节点。
 LastEditors: avert-win
 '''
 from creatTree import *

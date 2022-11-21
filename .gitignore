@@ -1,5 +1,6 @@
 bin/
-test.cpp
+test*
 .vscode/
 *.exe
 *.out
+temp*

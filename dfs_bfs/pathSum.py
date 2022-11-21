@@ -1,20 +1,16 @@
 '''
 Author: avert-win
 Date: 2022-10-19 11:43:02
-LastEditTime: 2022-10-21 15:25:48
+LastEditTime: 2022-10-25 22:00:13
 FilePath: \ProgramDaily\dfs_bfs\pathSum.py
-Description: 简介
+Description: 找出给定二叉树中的某条路径，其上节点的值的总和为给定值。已知满足条件的路径必定存在，有多条时返回任意一条。
 LastEditors: avert-win
 '''
+import sys
+sys.path.append('E:\\ProgramDaily')
 from typing import *
-import copy
+from sword_refers_to_offer.creatTree import *
 import queue
-
-class TreeNode:
-    def __init__(self, val=0, left=None, right=None):
-        self.val = val
-        self.left = left
-        self.right = right
 
 class Solution:
     def pathSum(self, root: TreeNode, target: int) -> List[List[int]]:
@@ -40,25 +36,6 @@ class Solution:
         dfs(root, target)
 
         return paths
-
-# 从前序遍历数组构造二叉树，只有在子节点左右不对称时数组中才会有None，否则下一个数字可能属于另一棵子树。
-def createTree(tree: List):
-    if not len(tree):
-        return None
-    q = queue.Queue()
-    root = TreeNode(tree[0])
-    q.put(root)
-    i = 1
-    while not q.empty() and i<len(tree):
-        curr = q.get()
-        if tree[i]:
-            curr.left = TreeNode(tree[i])        
-            q.put(curr.left)
-        if tree[i+1]:
-            curr.right = TreeNode(tree[i+1])
-            q.put(curr.right)
-        i += 2
-    return root
 
 def printTree(root: TreeNode):
     q = queue.Queue()
@@ -86,39 +63,3 @@ if __name__ == "__main__":
     printTree(root)
     solu = Solution()
     print(solu.pathSum(root, 22))
-
-    str = "str"
-    str.strip()
-    str.split()
-
-
-class Solution_2:
-    def reverseWords(self, s: str) -> str:
-        s = s.strip()
-        words = s.split(' ')    # 如果有连续两个空格，出现一个空字符串（不含空格）
-
-        words.reverse()
-
-        news = ""
-        for w in words:
-            if w == ' ':
-                continue
-            news += w
-            news += ' '
-
-        news = news.strip()
-
-        return news
-
-def reverse(s):
-    news = ""
-    j = len(s)-1
-    while(j>=0):
-        news += s[j]
-        j -= 1
-    return news
-
-print(reverse("abc"))
-
-solu = Solution_2()
-solu.reverseWords("a  b c ")

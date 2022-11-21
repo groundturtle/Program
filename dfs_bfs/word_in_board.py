@@ -1,7 +1,7 @@
 '''
 Author: avert-win
 Date: 2022-10-18 16:29:51
-LastEditTime: 2022-10-18 17:50:33
+LastEditTime: 2022-10-25 22:30:01
 FilePath: \ProgramDaily\dfs_bfs\word_in_board.py
 Description: 深度优先搜索、回溯
         查询一个二维表格中是否含有某个单词，相邻字母之间只能是左右或上下相邻，不能是斜相邻。
@@ -13,10 +13,8 @@ LastEditors: avert-win
 # 因来路不再进行搜索，每个点向三个方向搜索，因此每个起点时间复杂度O(l^3)，共有n*m个不同起点
 # 使用布尔数组标记防止重复搜索，或使用set(tuple [, tuple[, ...]])，任何immutable的数据结构都是hashable的。
 from typing import *
-import numpy as np
-
 """ 
-    若不论当前是否满足要求都标记已探索，则不能绕回旁边，导致错误；应在确定满足要求后再标记
+    只有在当前路径上的节点才应该出现在已探索集合中，每次退出递归函数前都应将该节点从集合中取出。
     回溯之后，若再次到达，必是中间经过了不同路线，此时必须允许再次探索！ 
 """
 class Solution:
