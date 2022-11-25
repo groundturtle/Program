@@ -1,7 +1,7 @@
 /*
  * @Author: avert
  * @Date: 2022-03-08 23:41:43
- * @LastEditTime: 2022-04-29 09:23:20
+ * @LastEditTime: 2022-11-24 16:30:57
  * @Description: 卒过河到B点，其中下界有马，马只走一步或不动，求过河到B点有几种方式。
  */
 
@@ -41,27 +41,15 @@ int main()
         {-2, 1},
         {-2, -1}
     };
-    for(size_t i = 0; i < B[0]+1; i++)
+    for(size_t i = 1; i < B[0]+1; i++)
     {
         // loop： 边界 + 全部 - 冲突
         // 被马阻拦的道路在一次循环内就要处理，以免对后续结果产生错误影响。
-        for(size_t j = 0; j < B[1]+1; j++)
+        for(size_t j = 1; j < B[1]+1; j++)
         {
-            if(!i && !j)
-            {
-                continue;
-            }
-            else if(j==0&&i!=0)
-            {
-                dp[i][j] = dp[i-1][j];
-            }
-            else if(i==0&&j!=0)
-            {
-                dp[i][j] = dp[i][j-1];
-            }
-            else
-                dp[i][j] = dp[i-1][j] + dp[i][j-1];
-            
+            // 先直接判断方法数：上、左两格相加；
+            dp[i][j] = dp[i-1][j] + dp[i][j-1];
+            // 再判断是否被阻拦，若阻拦直接将方法数置0。
             for(int dir=0; dir<9; dir++)
             {
                 if(i==horse[0]+dirs[i][0]&&j==horse[i]+dirs[i][1])

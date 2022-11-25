@@ -1,7 +1,7 @@
 /*
  * @Author: avert-win
  * @Date: 2022-10-27 08:56:37
- * @LastEditTime: 2022-10-27 10:30:43
+ * @LastEditTime: 2022-11-24 16:47:47
  * @FilePath: \ProgramDaily\binarySearch\insertPlace.cpp
  * @Description: 最简单的二分查找形式，找到非递减数组中该数可插入的位置。
  * @LastEditors: avert-win
@@ -30,6 +30,7 @@ int main(){
     vector<int> v1 = {5};
     vector<int> v2 = {1};
     // 由于vector::insert()的线性时间复杂度，使用二分法查找插入位置实际上没有意义
+    // 但对于部分如set的STL容器，尽管容器会自动排序，但指示正确的搜索开始位置能极大加速（从O(logn)到O(1)）。
     int index = findPlace(v1, 3);
     int index2 = findPlace(v2, 3);
     v1.insert(v1.begin()+index, 3);
