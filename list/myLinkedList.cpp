@@ -3,16 +3,17 @@
  * @Date: 2022-09-23 16:59:27
  * @LastEditTime: 2022-09-24 11:12:18
  * @FilePath: \ProgramDaily\bulk\LinkedList.cpp
- * @Description: 功能不完备、表头表尾皆为空的双向链表，在力扣提交测试用例只对了一半。
+ * @Description: 实现了 get(index), addAtHead(val), addAtTail(val), addAtIndex(index,val), deleteAtIndex(index)的双向链表。
+ *      其中addAtIndex()在链表中的第 index 个节点之前添加值为 val  的节点，如果 index 等于链表的长度，则该节点将附加到链表的末尾；
+ *      如果 index 大于链表长度，则不会插入节点。如果index小于0，则在头部插入节点。。
  *              https://leetcode.cn/problems/design-linked-list/submissions/
  * @LastEditors: avert-win
  */
 #include<bits/stdc++.h>
 
 /**
- * @brief 类定义内可嵌套其它对象；类的私有成员变量在构造函数中初始化。
- * 在链表内进行根据索引的删除、插入等操作时，可根据index与size/2的关系，
- *  来决定是从前往后遍历还是从后往前遍历,以便节省时间。
+ * @brief 类定义内可嵌套其它类/结构体；类的私有成员变量在构造函数中初始化。
+ * 在链表内进行根据索引的删除、插入等操作时，可根据index与size/2的关系，来决定是从前往后遍历还是从后往前遍历,以便节省时间。
  */
 class MyLinkedList {
     struct Node{

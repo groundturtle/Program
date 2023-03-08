@@ -3,7 +3,7 @@ Author: avert-win
 Date: 2022-10-21 15:26:13
 LastEditTime: 2022-10-22 22:08:30
 FilePath: \ProgramDaily\sword_refers_to_offer\creatTree.py
-Description: 简介
+Description: 从层次遍历数组构造二叉树.
 LastEditors: avert-win
 '''
 import queue
@@ -15,7 +15,7 @@ class TreeNode:
         self.left = None
         self.right = None
 
-# 从前序遍历数组构造二叉树.
+# 从层次遍历数组构造二叉树.
 def createTree(tree: List):
     if not len(tree):
         return None

@@ -3,7 +3,7 @@ Author: avert-win
 Date: 2022-10-25 16:38:39
 LastEditTime: 2022-10-25 16:56:26
 FilePath: \ProgramDaily\sword_refers_to_offer\inserSort.py
-Description: 简介
+Description: 插入排序
 LastEditors: avert-win
 '''
 from typing import *

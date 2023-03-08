@@ -3,12 +3,13 @@ Author: avert-win
 Date: 2022-10-20 11:39:33
 LastEditTime: 2022-10-20 11:40:34
 FilePath: \ProgramDaily\sword_refers_to_offer\treeToDoubleList.py
-Description: 将二叉搜索树改为双向链表，要求不创造新的节点。
+Description: 将二叉搜索树改为单调递增的双向链表，要求不创建新的节点。
 LastEditors: avert-win
 '''
 
 # 法一：结构体存储节点值和节点指针，然后排序，最后生成链表。 空间复杂度O(n)，时间复杂度O(n*logn)，没有用到二叉搜索树的特性。
-# 法二：中序遍历，得到的就是递增序列；维持两个指针pre和curr，令curr->left = pre; pre->right = curr; 最后处理头尾。 时间复杂度O(n)，空间复杂度O(d)，其中n为节点数量，d为最大深度，也即O(n)
+# 法二：中序遍历，得到的就是递增序列；维持两个指针pre和curr，令curr->left = pre; pre->right = curr; 最后处理头尾。 
+#       时间复杂度O(n)，空间复杂度O(d)，其中n为节点数量，d为递归最大深度，也即O(n)
 
 # Definition for a Node.
 class Node:

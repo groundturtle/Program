@@ -11,33 +11,56 @@
 #include<algorithm>
 
 /**
- * vector.push_back()需要得到或根据数据构造一个实例,而emplace_back()只需要一个临时对象, 少了一次拷贝过程. 
- *      但是前者可以直接使用值自行构造相应类型,而后者不行,因此不能做到完全替代.
- *      对于错误使用emplace_back()的情况,编译不会通过,因此可以直接使用.
+ * @ref string hashing: https://cp-algorithms.com/string/string-hashing.html
+ * @ref modular multiplicative inverse: https://cp-algorithms.com/algebra/module-inverse.html 
  */
-
 
 /**
- * * hash(s) = (s[0] + s[1]*p + ... + s[n]*pow(p, n)) % m
- * According to this formula, we have this:
- * * hash(s[i:j])*pow(p, i) = (s[i]*pow(p, i-i) + s[i+1]*pow(p, i+1-i) ... + s[j]*pow(p, j-i)) % m
- * *             = (hash(s[0:j]) - hash(s[0:i-1])) % m
- * To remove the `pow(p, i)` on left but without any division, when we compare two substrings, we are doing this:
- * * hash(substring_left) *= pow(p, pow_substring_right - pow_substring_left)
- * In this way, two hashes have multiplied the same power of p, then we can compare it directly by comparing hash values.
-
- * Usually set p a prime near the number of different characters, and m a large prime number.
- * The probability of two random strings colliding is about 1/m, that's why m should be last. But why?
- *
- * To improve no-collision probability, use two or more hash function with different p and m.
- * By this way, the probability of collision is equivalent as having one function with m = m*m.
+ * @brief 字符串的子串哈希值计算步骤如下：
+ * 1. 计算并存储 hash(s[0:i]), i = 0, 1, 2, ..., n;
+ * 2. 生成（需要的）子串 s[i:j], 计算并存储 hash(s[i:j]) =( hash(s[0:j]) - hash(s[0:i]]) )* pow(p, n - i)
+ * 3. 根据要求取出子串的哈希值进行比较。为防止冲突，可以在哈希值相同时用朴素的方法再进行一次确认。
+ * 
+ * @brief 若要比较不同来源的字符串，只需将上述步骤2中的因数 pow(p, n - i) 改为 pow(p, m - i), 其中 m 为两字符串中较长者的长度。
+ * 
+ * 步骤1的时间复杂度为O(n)，步骤二时间代价与子串数量数量级相同，步骤三常数时间复杂度。
+ * 由于 pow() 函数本身具有一定的时间消耗，因此使用滚动数组形式，以节省时间。
+ * 
+ * 使用滚动哈希方法的时空复杂度主要取决于要生成的子串数量。
+ * 
+ * 以上步骤的推导见下方注释。
  */
+
+/**
+ * & hash(s[0:n]) = (s[0] + s[1]*p + ... + s[n]*pow(p, n)) % m
+ * According to this formula, we have this:
+ * & hash(s[i:j]) = (s[i]*pow(p, 0) + s[i+1]*pow(p, 1) ... + s[j]*pow(p, j-i)) % m
+ * By multiplying pow(p,i):
+ * & hash(s[i:j])*pow(p,i)          (f1)
+ * &        = (s[i]*pow(p,0)*pow(p,i), s[i+1]*pow(p,1)*pow(p,i), ... +s[j]*pow(p,j-i)*pow(p,i))
+ * &        = (s[i]*pow(p, i) + s[i+1]*pow(p, i+1) ... + s[j]*pow(p, j)) % m
+ * &        = (hash(s[0:j]) - hash(s[0:i-1])) % m
+ * 现在，上式相当于从完整的 hash(s[0:n]) 中截取出来的一部分，因此有可能与截取出来的另一部分进行比较。
+ * 
+ * 当比较两个子串 s[i:j] and s[k:r], 满足 i <= k, 运用以下公式：
+ * &    hash(s[i:j]) *= pow(p, k - i)       (f2)
+ * 在对两条子字符串分别运用公式 f1 之后，使用上式 f2 ，使得两边乘上了相同的一个因子：pow(p, k)，推导如下
+ * &    pow(p, i) * pow(p, k-i)  ==  pow(p, i+k-i)  ==  pow(p, k)
+ * 现在就可以不做乘法而直接比较两个字符串了。
+ * 
+ * 由于大多数时候需要进行比较的不只是一对字符串，因此一般将上述公式 f2 中的 k - i 改为 n - i，
+ * 然后将哈希值存储起来，以便随时能取出任意数量的字符串进行比较。
+ * 
+ * 可以设置多个m，同步进行计算，从而减小哈希冲突概率；
+ * 或者在哈希检测认为相同时，进行额外的比较，从而解决哈希冲突带来的问题。
+ */
+
 
 /**
  * @description: Calculating hash value of string.
  * This is for all usages of string hashing.
- * @param str
  * @return {long long} hash_value
+ * @complexity: O(n)
  */
 long long compute_hash(std::string const& str)
 {
@@ -93,7 +116,7 @@ std::vector<std::vector<int>> group_identical_strings(std::vector<std::string>co
 
 /**
  * *Example 2.
- * @brief Given a string  of length , consisting only of lowercase English 
+ * @brief Given a string  of length n, consisting only of lowercase English 
  *        letters, find the number of different substrings in this string.
  * 
  * @param s 
@@ -128,12 +151,13 @@ int count_unique_substrings(std::string const& s)
     /**
      * @brief 从长度为1的字符串开始,计算子串的哈希值并填入集合中.
      *        由于集合的自动去重,每个尺度下的集合大小即为该尺度下不同字符串的数量. 
-     * @brief 子串的哈希值计算: 根据文件开头的上述公式以及为避免除法而做的简化,
+     * @brief 子串的哈希值计算: 根据文件开头的公式（尤其f1和f2），
      *        在这里把最右侧的子串当作标准,每一个子串s[i:j]的哈希值都用以下两步计算:
-     *     *  hash(s[i:j]) = (hash(s[0:j]) - hash(s[0:i])) % m
-     *     *  hash(s[i:j]) *= p_pow[n]/p_pow[i]
-     *        又由于在代码实现中, n是总数而i是从0开始的索引, p_pow的索引最大为n-1,
-     *        因此第二步的因数写成了p_pow[n]/p_pow[i-1]的等价形式(实际上取了模,其值并非简单相除得到的.).
+     *     1.  hash(s[i:j]) = (hash(s[0:j]) - hash(s[0:i])) % m
+     *     2.  hash(s[i:j]) *= p_pow[n-1] / p_pow[i]
+     * 
+     *     注意到以上第二步，hash(s[i:j]) 所乘的并非公式中的 pow(p, j-i)，而是换成了pow(p, n-i)，
+     *      因此这个公式要对所有字符串同时使用，而且使所有字符串都能通过一次性计算的哈希值进行比较。
      */
     for(int len=1; len<=n; len++)
     {
@@ -161,10 +185,3 @@ int main()
     begin = clock();
 }
 
-
-
-/**
- * @ref string hashing: https://cp-algorithms.com/string/string-hashing.html
- * @ref modular multiplicative inverse: https://cp-algorithms.com/algebra/module-inverse.html 
- * @ref 
- */

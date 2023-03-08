@@ -48,8 +48,8 @@ class Solution{
 public:
     int numberWays(vector<vector<int>>& hats){
         int n = hats.size();
-        int m;      // 找到最大的帽子编号，不往后遍历，节省时间。
-        for(auto& v : hats)
+        int m = 0;      // 找到最大的帽子编号，不往后遍历，节省时间。
+        for(const auto& v : hats)
             m = std::max( *std::max_element(v.begin(), v.end()), m);
         int maskMax = pow(2, n) - 1;
         int dp[m+1][maskMax+1];             // 为了初始化能使整个过程以一致的方式运行，将帽子从1开始编号，保留0.
@@ -71,7 +71,7 @@ public:
             // 内循环：状态掩码
             for(int mask=0; mask<=maskMax; mask++){      // 从没有人戴帽子开始，到所有人都戴上
                 dp[i][mask] = dp[i-1][mask];      // 新帽子不被戴的情况
-                for(auto bit : hatToPerson[i]){     // 拥有新帽子的每个人，检查是否刚刚戴上一顶帽子。
+                for(const auto& bit : hatToPerson[i]){     // 拥有新帽子的每个人，检查是否刚刚戴上一顶帽子。
                     //! 易错点：没有检查该人员是否具有该帽子。
                     if(mask & 1<<bit){       // 第bit个人未戴帽子，且具有该帽子。从后往前编号或是相反都无所谓，只要保持一致就行。只有此处用到了人的编号，因此不会出错。
                         dp[i][mask] += dp[i-1][mask ^ 1<<bit];
@@ -85,7 +85,7 @@ public:
 };
 
 int main(){
-    vector<vector<int>> hats = {{3,4}, {4,5}, {5}};
+    vector<vector<int>> hats = {{3,4}, {4,5}, {5,6}};
     Solution solu = Solution();
     cout<<solu.numberWays(hats);
 }

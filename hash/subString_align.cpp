@@ -66,7 +66,6 @@ std::pair<int, int> overlap(std::string& a, std::string& b)
     int length_a = a.size(), length_b = b.size(), length_max = length_a > length_b?length_a : length_b;
     long long hashes_a[length_a+1], hashes_b[length_b+1], p_pows[length_max];
     std::unordered_map<long long, int> hash_a;
-    // std::vector<long long>::iterator it;
     long long hash_b = 0;
     p_pows[0] = 1;
     for(size_t i=1; i<length_max; i++)

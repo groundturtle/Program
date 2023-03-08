@@ -43,7 +43,7 @@
 
 - `virtual`：声明虚函数，可在子类中（重新）实现。
 
-- `final`(c++11)：用在类或者类的成员函数声明之后，使其不可继承（虚函数不可实例化）。
+- `final`(c++11)：用在类或者类的成员函数声明之后，使其不可被修改（虚函数不可实例化）。
 
 ```c++
 virtual void func();            // 虚函数声明，声明者必须实现
@@ -51,6 +51,20 @@ virtual void func1() = 0     // 纯虚函数声明，子类必须实现或再次
 
 virtual void func2() final;      // 不可继承函数
 class oxygen final : public air{};      // 不可继承类
+```
+
+#### 虚继承、虚基类
+
+对于A、B继承自F，C又同时继承A、B的情况，如果C调用某个F的虚函数，可能存在歧义：若C自身未实现，则不知道应调用该函数的哪个版本。
+> 又称dimand problem，画出继承的图例即可发现虚继承类的类图与钻石相似。
+
+虚继承只保存一份基类在内存中，每个子类存储一个虚基类表地址（虚基类指针），表中指针为虚基类的地址。虚基类指针占用子类内存，虚基类表不占用任何类的内存。
+
+```cpp
+class A{};
+class B : virtual public A{};
+class C : virtual public A{};
+class D : public B, public C{};
 ```
 
 #### 宏和函数
@@ -192,9 +206,32 @@ _2022-11-26, 12:14_
 
 相比C，C++的枚举类型可以限定作用域，避免不正确使用而编译器又无法识别。
 
+一个枚举类型内各枚举变量从0开始依次顺序编码，因此若不对作用范围作限制，任意一个类型的枚举变量可以和相应的数字（如int型变量）匹配，不安全。
+
 ```cpp
 enum color{red, green};
 enum class Animal {dog, cat};
 color blood = color::red;
 Animal a = Animal::dog;     // safe use
+
+blood == 0;      // true: unsafe
+a == 0;       // error: invalid operands to binary expression ('Color' and 'Animal')
 ```
+
+#### 智能指针
+
+- `auto_ptr`: C++11中已经废弃；
+
+- `shared_ptr`: 允许多个指针共享一个对象（相当于普通指针），最后一个指针销毁或转移时自动释放对象（智能）；
+
+    - 为使引用计数能正确进行，原始对象不应有共享指针以外的任何引用或指针，第一个指针必须在对象创建时直接得到，其余所有共享指针必须由第一个共享指针直接复制而来，否则会造成引用/析构已销毁对象的情况出现；
+        
+        
+    - 如两个`shard_ptr`互相指向，会造成因互相引用（成环）而无法销毁的情况；为应对以上情况，将其中一个指针改为其派生类指针`weak_ptr`，该指针与`shared_ptr`共享对象，但不影响计数。`weak_ptr`是`shared_ptr`的派生类，创建与使用与基类同理。
+
+- `unique_ptr`: 独占式指针，该指针指向的对象只允许有一个引用。`unique_ptr`不能复制，但可以移动，使用`std::move()`赋值可以实现移动语义。
+
+    - 理论上如将`unique_ptr`作为一个函数的值返回类型，则函数的返回值实际上是个空指针，因为其无法复制，但因为RVO优化的存在，实际上函数返回的对象不会经构造、复制两个过程，而是直接在调用者栈中构造，因此不会有任何问题。
+    即便不进行**RVO优化**，由于`unique_ptr`实现了`move`语义且编译器按照 **move -> copy -> error**的顺序进行赋值，函数依然可以返回一个`unique_ptr`类型对象。
+    - 参数可以传递（常量）**引用**形式，也可以使用std::move()然后传递**右值引用**，
+    - **不能直接传值**，传值在进入函数前就已经发生错误：`error: call to deleted constructor of 'unique_ptr<A>'`

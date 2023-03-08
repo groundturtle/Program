@@ -5,7 +5,7 @@
  * @FilePath: /os/chapter30_cond.c
  * @Description: 
  *      调用pthread_cond_signal()发送信号时，只有一个线程会收到信号（且随机），因此有pthread_cond_broadcast()来代替；
- *      调用pthread_cond_wait()时，总是假设已经得到了锁、并将在其内部得到信号前释放锁、得到信号后重新加回锁。
+ *      调用pthread_cond_wait()时，总是假设已经得到了锁、并将在其内部得到信号前释放锁、得到信号后重新加回锁并重新判断执行条件。
  * @LastEditors: avert-win
  */
 #include<stdio.h>
