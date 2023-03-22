@@ -23,7 +23,7 @@ vector<int>::iterator sortPart(vector<int>& arr, vector<int>::iterator start, ve
     vector<int>::iterator r = end;
     vector<int>::iterator l = start;
     r--;
-    int pivot = *r;
+    int pivot = *(end--);
     while(l != r){       // 从左到右，小于与大于交换，最后pivot放到start和end相逢处。
         if(*l < pivot){
             l++;

@@ -41,8 +41,7 @@ int main(){
 //1. shared_ptr
     // shared_ptr<A> pA = new A; // error: 类型错误
     shared_ptr<A> pA(new A);
-    // shared_ptr<A> pB(pA);
-    //! 弱指针不会影响计数，因此这个指针可能成为野指针。
+    //! 弱指针不会影响计数，因此这个指针可能成为野指针。使用expired()判断是否失效。
     weak_ptr<A> pC(pA);     
     //& 若无其它引用，在pA.reset之后原对象就被析构；否则不会析构，直到pB被销毁。
     pA.reset(new A);    

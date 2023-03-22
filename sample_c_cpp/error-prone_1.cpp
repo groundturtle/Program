@@ -34,6 +34,8 @@ int main(){
     T t = T();      // 实例化对象
 
     int x;
-    list<int> L0(list<int>(x));     // 声明函数
-    list<int> L1( (list<int>(x)) );  // 构造链表
+    list<int> L0( list<int>(x) );     // 声明函数，类型是int链表
+    list<int> L1( (list<int>(x)) );  // 构造链表：形参不允许括号括住类型
+
+    // cout<<L0.begin();       // error: 类型错误
 }

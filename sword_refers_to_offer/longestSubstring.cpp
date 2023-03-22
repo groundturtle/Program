@@ -3,7 +3,7 @@
  * @Date: 2022-10-13 20:56:32
  * @LastEditTime: 2022-10-13 21:01:57
  * @FilePath: \ProgramDaily\sword_refers_to_offer\longestSubstring.cpp
- * @Description: 简介
+ * @Description: 最长不重复连续子串，使用滑动窗口法
  * @LastEditors: avert-win
  */
 #include<bits/stdc++.h>
