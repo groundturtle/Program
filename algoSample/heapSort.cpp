@@ -4,6 +4,8 @@
 
 using namespace std;
 
+namespace my{
+
 class maxHeap{
 private:
     vector<int> _vec;
@@ -66,7 +68,7 @@ bool maxHeap::insert(int x){
 int maxHeap::top(){
     if(_size)
         return _vec[0];
-    throw(exception());
+    throw(out_of_range("pop from empty heap"));
 }
 
 /**
@@ -101,17 +103,4 @@ bool maxHeap::pop(){
     return true;
 }
 
-#include<random>
-
-int main(){
-    int n = 13;
-    vector<int> test;
-    for(int i=0; i<n; i++){
-        test.push_back(rand() % 100);
-    }
-    maxHeap h(test);
-    while(h.size()){
-        cout<<h.top()<<" ";
-        h.pop();
-    }
 }

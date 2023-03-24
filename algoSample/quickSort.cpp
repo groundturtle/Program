@@ -12,45 +12,69 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+template <typename T>
+using Iter = typename vector<T>::iterator;      //! 必须加上typename才能标识！
+
 /**
- * @brief 选取最右边为基准，相等和更大的的放到右边，不保证相等的相邻。
+ * @brief 选取最右边为基准，相等和更大的的放到右边，稳定排序。\n
+ * 调用者必须保证传入的区间长度不为0.
+ * 
  * @param arr 整个待排序数组。
- * @param start 此次需要排序的部分的开头迭代器
- * @param end 此次需要排序部分的结尾迭代器（开区间）
+ * @param begin 指向待排序部分开头的元素的迭代器
+ * @param end 待排序部分的结尾迭代器（开区间）
  * @return vector<int>::iterator 分界线：左小右大（或相等）。
  */
-vector<int>::iterator sortPart(vector<int>& arr, vector<int>::iterator start, vector<int>::iterator end){
-    vector<int>::iterator r = end;
-    vector<int>::iterator l = start;
-    r--;
-    int pivot = *(end--);
-    while(l != r){       // 从左到右，小于与大于交换，最后pivot放到start和end相逢处。
-        if(*l < pivot){
-            l++;
-            continue;
+vector<int>::iterator sortPart(vector<int>& arr, Iter<int> begin, Iter<int> end){
+    vector<int> tmp(arr.begin(), arr.end());       // 拷贝，用于排序，以保证稳定。
+    Iter<int> pit = tmp.begin();
+
+    Iter<int> it = begin;
+    int pivot = *(end-1);
+    while(it != end){           // 首先遍历一次，小于的依次放到前头
+        if(*it < pivot){
+            *pit = *it;
+            pit ++;
         }
-        if(*r >= pivot){
-            r--;
-            continue;
-        }
-        int temp = *l;
-        *l = *r;
-        *r = temp;
+        it++;
     }
-    assert(l == r);
-    *(end-1) = *r;
-    *r = pivot;
-    return l;
+
+    *pit = pivot;            // 然后中间把分界线放进来。
+    // Iter<int> ret = pit;         //! 返回值不对！返回了一个被销毁变量的指针!
+    Iter<int> ret = pit;
+    pit++;
+
+    it = begin;
+    while(it != end){           // 最后再遍历一次，大于等于的依次放到前头
+        if(*it >= pivot){
+            *pit = *it;
+            pit ++;
+        }
+        it++;
+    }
+    // 将临时空间里的数据拷贝回去。
+    it = tmp.begin();
+    while(begin != end){
+        if(it == ret)       // 因为长度相等，当 tmp 迭代器到达了标记位置，arr 迭代器也到达了，此时才能获得返回值。
+            ret = begin;        // 这才是真正应该返回的！
+        *begin = *it;
+        begin++;
+        it++;
+    }
+    return ret;
 }
 
-// 为保持调用习惯一致，参数左闭右开。因为此函数才是递归函数，递归出口也必须设置在这里。此处采用的方式是设置递归退出条件，而不是递归准入条件。
 void quickSort(vector<int>& arr, vector<int>::iterator begin, vector<int>::iterator end){
-    if(begin != end){
-        auto mid = sortPart(arr, begin, end);
-        // 分界线本身不需要再参与排序。
-        quickSort(arr, begin, mid);     
-        quickSort(arr, mid+1, end);         // 因为是左闭右开，一定有mid+1 <= end，所以以上判断足够退出递归。
+    if(begin == end)
+        return;
+    Iter<int> ret = sortPart(arr, begin, end);
+    cout<<*ret<<"  ";
+    if(ret != begin){
+        quickSort(arr, begin, ret);
     }
+    if(ret+1 != end){      
+        quickSort(arr, ret+1, end);         //! 这里不加一就永远出不去！因为被调用者的栈中begin和end不相等！
+    }
+    return;
 }
 
 int main(){
