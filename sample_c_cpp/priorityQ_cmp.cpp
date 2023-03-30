@@ -19,11 +19,14 @@ class priority_queue{}; */
 */ 
 
 /**
- * @brief 自定义优先队列的比较有三种方法，如果使用的是非标准类型，则需要向构造函数传入该类型的一个实例用于排序。
+ * @brief 自定义优先队列的比较有四种方法，如果使用的是非标准类型，则需要向构造函数传入该类型的一个实例用于排序。
  * 1. 重载结构体的运算符`<`，然后使用标准的std::less<int>，
  * 2. 仿函数，即重载一个结构体或类的圆括号，用该结构/类模仿一个函数；
  * 3. lambda表达式实例化；
  * 4. 普通函数，将函数指针类型作为模板参数、函数指针作为构造函数参数。
+ * 
+ * 其中2，3，4本质相同，即声明一个类型作为模板参数，然后给构造函数传入一个该类型的实例。\n 
+ * 并且，在2，3，4中，传入的类型参数可以用来声明变量，因此使用无参构造函数实际上也可以。
  */
 
 typedef std::pair<int, char>  heapElem;
@@ -38,14 +41,14 @@ struct node{
 };
 std::priority_queue<node> Q;
 
-//& 2. 仿函数：重载()符号。注意需要传给构造函数的是下面定义的变量，而非这个结构体的名称。
+//& 2. 仿函数：重载()符号。注意需要传给构造函数的是一个该类型变量（不传也行）
 struct cmpfunctor{
     bool operator()(const heapElem& a, const heapElem& b)const{
         return a.first < b.first;
     }
 };
 cmpfunctor cmp;
-std::priority_queue<heapElem, vector<heapElem>, cmpfunctor> Q1(cmp);
+std::priority_queue<heapElem, vector<heapElem>, cmpfunctor> Q1; // Q1(&cmp) 都可以，下同
 
 //& 3. lambda表达式
 auto lambdacmp = [](const heapElem& a, const heapElem& b){

@@ -12,7 +12,7 @@ using namespace std;
 
 /**
  * 首先判断是不是回文字符串，
- * 若是则可以直接修改第一个非a字母；
+ * 若是则可以直接修改第一组非a字母；
  * 若不是，则有两种情况，
  * 1. 找到不对称的地方，并将这两个对称位置的字符都修改成a。
  * 2. 找到不对称的两组，分别为每组选择更改头为尾，或者更改尾为头。使用ASCII比较。
@@ -28,7 +28,7 @@ int main(){
     int bad_count = 0;
     for(int i=0; i<=len/2; i++){
         int j = len - i - 1;
-        if(s[i] != s[j]){
+        if(s[i] != s[j] && bad_count < 2){
             bad[bad_count] = i;
             bad_count ++;
         }
@@ -36,19 +36,17 @@ int main(){
             not_a = i;
     }
     // 已经是回文，把第一组非'a'改成'a'
-    if(bad_count == 0){
+    if(bad_count == 0 && not_a != -1){
         s[not_a] = 'a';
         s[len - not_a - 1] = 'a';
     }
     // 有一组不同，可以选择更改这组两个，也可以只更改一个（若本身为'a'）
     // 但剩余的一次操作机会不足以做任何事情。
-    if(bad_count == 1){
-        if(s[bad[0]] == 'a'){
-
-        }
+    else if(bad_count == 1){        //! 不加else，导致count==0的情况进入下一循环
         s[bad[0]] = 'a';
         s[len - bad[0] - 1] = 'a';
     }
+    // 有两组不同，每一组都只能修改一个
     else for(int i=0; i<2; i++){
         if(s[bad[i]] < s[len - bad[i] - 1])
             s[len - bad[i] - 1] = s[bad[i]];

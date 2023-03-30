@@ -34,12 +34,15 @@ int main()
     printf("%ld\n", sizeof(sc_));       // size of pointer
     printf("%ld\n", sizeof(_sc_));      // size of pointer
 
-    // cost不是int**型;
     int n = 3;
+    // cost不是int**型;
     int cost[n+1][n+1];
 
     // 初始化二维数组：用new int型指针数组的方式来返回一个int**型地址，之后再循环new n次一维数组。
     int** d = new int*[n];
+    // int** arr2d = new int[n][n];     // 错误
+    int (*arr2d)[3] = new int[n][3];        // 第二维度数必须是常量。
+    arr2d = cost;
     
     // 创建数组时，必须指定除了第一维以外的所有维度大小.
     int a[][2] = {{1, 2}, {3, 4}};

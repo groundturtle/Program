@@ -1,3 +1,10 @@
+/**
+ * @file main.cpp
+ * @author avert-goose (avert-goose@hnu.edu.cn)
+ * @brief 测试堆，栈，双向队列，循环列表，快速排序
+ * @version 0.1
+ * @date 2023-03-25
+ */
 #include<iostream>
 #include<random>
 

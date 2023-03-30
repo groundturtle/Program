@@ -1,14 +1,13 @@
 /**
  * @file rain_cut.cpp
  * @author avert-win (avert@hnu.edu.cn)
- * @brief 
+ * @brief 一段彩带，求包含的颜色不超过k种的最长连续一段的长度。
  * @version 0.1
  * @date 2023-03-18
  * @complexity:
  */
 
 // 使用滑动窗口，在窗口左边界右移时更新结果。
-
 
 #include<bits/stdc++.h>
 using namespace std;
